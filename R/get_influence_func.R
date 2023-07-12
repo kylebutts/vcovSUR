@@ -9,19 +9,10 @@
 #' 
 get_influence_func <- function(est) {
   # (X'X)^{-1} X'e
-  if (inherits(est, "fixest_multi")) {
-    
-    inf_list = lapply(est, function(x) { 
-      (x$cov.iid / x$sigma2) %*% t(x$scores)
-    })
+  if (inherits(est, "fixest")) {
 
-    mat = blockDiagonal(inf_list)
-    rownames(mat) = unlist(lapply(inf_list, rownames))
-
-  } else if (inherits(est, "fixest")) {
-    
     mat = (est$cov.iid / est$sigma2) %*% t(est$scores)
-  
+
   } else { # code taken partially from `sandwich`
   
     X <- stats::model.matrix(est)
@@ -63,4 +54,20 @@ get_cluster <- function(est, cluster) {
   } 
   
   return(cl)
+}
+
+
+#' Returns degrees of freedom from regression
+#' 
+#' @param est Estimation object of class `fixest` 
+#'   and `fixest_multi` from the `fixest` package
+#' 
+#' @return A vector of degrees of freedoms
+#' 
+get_dof <- function(est) {
+  if (inherits(est, "fixest")) {
+    degrees_freedom(est, "resid")  
+  } else if (inherits(est, "lm")) {
+    est$df.residual
+  }
 }

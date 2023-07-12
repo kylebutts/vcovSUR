@@ -4,12 +4,16 @@
 \alias{vcovSUR}
 \title{Get joint variance-covariance matrix of seemingly unrelated regressions}
 \usage{
-vcovSUR(ests, cluster = NULL)
+vcovSUR(ests, cluster = NULL, df = NULL)
 }
 \arguments{
 \item{ests}{List of \code{feols} estimates.}
 
 \item{cluster}{Scalar string denoting the name of the cluster column.}
+
+\item{df}{Scalar string denoting which degrees of freedom adjustment to
+make. Default is null which uses \code{n}. Can be either NULL, \code{"dfk"} or
+\code{"dfk2"} following Stata options. See details.}
 }
 \value{
 Variance-covariance matrix of the combined set of coefficients in
@@ -17,4 +21,20 @@ all models in \code{ests}.
 }
 \description{
 Get joint variance-covariance matrix of seemingly unrelated regressions
+}
+\details{
+\code{dfk} and \code{dfk2} specifies the use of an alternative divisor in computing
+the covariance matrix for the equation residuals. As an asymptotically
+justified estimator, the default uses the number of sample observations
+(n) as a divisor when the two datasets have the same number of
+observations.
+
+When the \code{dfk} option is set, a small-sample adjustment is
+made and the divisor is taken to be the square root of (n - k_i)(n - k_j),
+where k_i and k_j are the number of parameters in equations i and j,
+respectively (similarly the cube root of the product is taken if there are
+three estimates and so on..).
+
+When the \code{dfk2} option is set, the divisor is taken to be the mean of the
+residual degrees of freedom from the individual equations.
 }

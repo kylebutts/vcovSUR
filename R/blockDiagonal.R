@@ -4,10 +4,10 @@
 #' 
 #' @return A block diagonal `dgCMatrix` with each element of mats
 #' along the diagonal.
-blockDiagonal <- function(mats) {
+block_diagonal <- function(mats) {
   mats = lapply(mats, function(mat) {
     if(inherits(mat, "matrix") | inherits(mat, "dgeMatrix")) {
-      return(as(mat, "dgCMatrix"))
+      return(methods::as(mat, "dgCMatrix"))
     } else {
       return(mat)
     }
