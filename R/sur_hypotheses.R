@@ -49,17 +49,13 @@ sur_hypotheses <- function(ests, cluster = NULL, hypothesis = NULL, conf_level =
   )
 }
 
-library(marginaleffects)
-options("marginaleffects_model_classes" = "sur_model")
 
-#' @export
 get_coef.sur_model = function(model) {
   x = model$estimate
   names(x) = model$term
   return(x)
 }
 
-#' @export
 set_coef.sur_model = function(model, coefs) {
   model$estimate = coefs
   return(model)

@@ -66,7 +66,7 @@ get_cluster <- function(est, cluster) {
 #' 
 get_dof <- function(est) {
   if (inherits(est, "fixest")) {
-    degrees_freedom(est, "resid")  
+    fixest::degrees_freedom(est, "resid")  
   } else if (inherits(est, "lm")) {
     est$df.residual
   }
