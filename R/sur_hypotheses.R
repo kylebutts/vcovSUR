@@ -17,6 +17,7 @@
 #'   a coefficient is from in the hypothesis.
 #' @inheritParams marginaleffects::hypotheses
 #' 
+#' @import marginaleffects
 #' 
 #' @export
 sur_hypotheses <- function(ests, cluster = NULL, hypothesis = NULL, conf_level = 0.95, df = NULL, joint = FALSE, joint_test = "f") {

@@ -9,7 +9,7 @@ test_that("sur_hypotheses works", {
   )
 
   expect_equal(
-    hyp_test$estimate,
+    as.numeric(hyp_test$estimate),
     coef(est1)[["wt"]] - coef(est2)[["wt"]]
   )
 
@@ -20,7 +20,7 @@ test_that("sur_hypotheses works", {
   )
 
   expect_true(
-    hyp_test_clustered$p.value != hyp_test$p.value
+    as.numeric(hyp_test_clustered$p.value) != as.numeric(hyp_test$p.value)
   )
 })
 
@@ -32,7 +32,7 @@ test_that("sur_hypotehses fixest_multi works", {
   )
 
   expect_equal(
-    hyp_test$estimate,
+    as.numeric(hyp_test$estimate),
     coef(ests[[1]])[["wt"]] - coef(ests[[2]])[["wt"]]
   )
 })

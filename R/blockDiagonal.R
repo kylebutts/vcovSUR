@@ -2,6 +2,8 @@
 #' 
 #' @param mats List of sparse matrices `dgCMatrix`.
 #' 
+#' @import Matrix
+#' 
 #' @return A block diagonal `dgCMatrix` with each element of mats
 #' along the diagonal.
 block_diagonal <- function(mats) {

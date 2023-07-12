@@ -1,5 +1,4 @@
-#' Split fixest_multi into seperate elements of a list
-#' @export
+# Split fixest_multi into seperate elements of a list
 split_fixest_list <- function(ests) {
   if (inherits(ests, "fixest") | inherits(ests, "fixest_multi") | inherits(ests, "lm")) {
     ests <- list(ests)
