@@ -1,6 +1,6 @@
 Package: vcovSUR
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Inference With Multiple Regression Objects
+Version: 0.1.0
 Authors@R: 
   c(
     person(
@@ -10,7 +10,7 @@ Authors@R:
       comment = c(ORCID = "0000-0002-9048-8059")
     )
   )
-Description: What the package does (one paragraph).
+Description: This package allows inference and hypothesis testing to be conducted with multiple regression models. By clustering across common observations or common clusters, inference can account for the correlation between model's error terms. This package is designed to work with the 'fixest' package, but can be used with any model that provides the S3 generic method `inf_func` which returns an N by k matrix of the empirical influence function.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

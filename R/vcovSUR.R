@@ -38,7 +38,7 @@ vcovSUR <- function(ests, cluster = NULL, ssadj = FALSE) {
     (is.null(cluster) & inherits(ests, "fixest_multi"))
 
   ests = split_fixest_list(ests)
-  inf_list <- lapply(ests, get_influence_func)
+  inf_list <- lapply(ests, function(x) t(inf_func(x)))
   inf_funcs <- block_diagonal(inf_list)
   col_names = unlist(lapply(inf_list, rownames))
   ks <- unlist(lapply(inf_list, function(x) nrow(x)))
