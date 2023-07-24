@@ -36,20 +36,23 @@ devtools::install_github("kylebutts/vcovSUR")
 
 Consider running two regressions with different outcome variables. For our example, we will use the `CASchools` dataset from the `{AER}` package. The dataset contains data on test performance, school characteristics and student demographic backgrounds for school districts in California. Each row is a school.
 
-We want to see if the correlation between percent of students qualifying for reduced-price lunch (`lunch`) and test scores differ between the reading score (`read`) and the math score (`math`).
-
-```{r initial-regressions}
+```{r load}
 library(vcovSUR)
 library(fixest)
 data("CASchools", package = "AER")
+head(CASchools)
+```
 
+We want to see if the correlation between percent of students qualifying for reduced-price lunch (`lunch`) and test scores differ between the reading score (`read`) and the math score (`math`).
+
+```{r initial-regressions}
 (est_read <- feols(read ~ lunch, data = CASchools))
 (est_math <- feols(math ~ lunch, data = CASchools))
 ```
 
-Since we are using the same sample for both equations, there is likely a correlation between the error terms in each equation (shocks that impact reading scores for a school also are likely impacting math scores). We can estimate the variance-covariance matrix of estimates *across regression equations* using `vcovSUR`. Note that we need to specify the `cluster` argument to indicate which observations we think could have correlated error terms across regressions. This could be a variable for each observation or some higher level grouping variable (e.g. state, county, etc.). If you want to cluster by the observation id, use `cluster = "rowid"` which doesn't require the creation of an observation id variable and uses the correct degree of freedom adjustment.
+Since we are using the same sample for both equations, there is likely a correlation between the error terms in each equation (shocks that impact reading scores for a school also are likely impacting math scores). We can estimate the variance-covariance matrix of estimates *across regression equations* using `vcovSUR`. Note that we need to specify the `cluster` argument to indicate which observations we think could have correlated error terms across regressions. This could be a variable for each observation or some higher level grouping variable (e.g. state, county, etc.). If you want to cluster by the cross-sectional observation (each row in the dataset), use `cluster = "rowid"` which doesn't require the creation of the clustering variable and uses the correct degree of freedom adjustment. This option will be done automatically for `fixest_multi` objects which use the same dataset.
 
-Note that this works even if the dataset used in each regression differs. For example, you might have two subsamples (e.g. male and females) but you cluster at the county level to allow county-level shocks to be common across the subsamples. 
+Note that clustering works even if the dataset used in each regression differs. For example, you might have two subsamples (e.g. male and females) but you cluster at the county level to allow county-level shocks to be common across the subsamples. 
 
 ```{r vcovSUR-example}
 # No correlation between the coefficients since we are not clustering
@@ -57,6 +60,9 @@ vcovSUR(list(est_read, est_math))
 
 # Correlation between the coefficients since we are clustering by `rowid`
 vcovSUR(list(est_read, est_math), cluster = "rowid")
+
+# Cluster at the county level
+vcovSUR(list(est_read, est_math), cluster = "county")
 ```
 
 With the joint variance-covariance matrix, we can perform tests across regression specifications. However, this is a bit of a pain to do manually, so I have included the `sur_hypotheses` function which is a light wrapper around `hypotheses` from the [`marginaleffects` package](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html). The first two arguments are the same as `vcovSUR`, namely the list of estimates and the cluster variable name. 
@@ -79,6 +85,9 @@ You can also include `fixest_multi` objects in the `ests` parameter, and they wi
 est_multi <- feols(c(read, math) ~ lunch, CASchools)
 
 vcovSUR(est_multi)
+
+# Equivalent to
+vcovSUR(est_multi, cluster = "rowid")
 ```
 
 ```{r fixest_multi-example-2}
@@ -87,3 +96,12 @@ sur_hypotheses(
   hypothesis = "lunch_1 = lunch_2"
 )
 ```
+
+## Sources
+
+Peter Hull's Tweets: https://twitter.com/instrumenthull/status/1492915860763250691
+
+[Stata `suest` command](https://www.stata.com/manuals/rsuest.pdf)
+
+[Stata `stackreg` command](https://journals.sagepub.com/doi/full/10.1177/1536867X211025801#fn6-1536867X211025801)
+
