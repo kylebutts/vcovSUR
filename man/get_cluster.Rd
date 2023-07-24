@@ -4,7 +4,7 @@
 \alias{get_cluster}
 \title{Returns (X'X)^{-1} X'e from regression}
 \usage{
-get_cluster(est, cluster)
+get_cluster(est, cluster, use_rowid)
 }
 \arguments{
 \item{est}{Estimation object of class \code{fixest}
@@ -12,6 +12,9 @@ and \code{fixest_multi} from the \code{fixest} package}
 
 \item{cluster}{Scalar string denoting the name
 of the cluster column.}
+
+\item{use_rowid}{Scalar logical denoting if row number
+should be used as the cluster.}
 }
 \value{
 A vector of cluster labels

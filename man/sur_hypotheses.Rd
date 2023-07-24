@@ -17,7 +17,10 @@ sur_hypotheses(
 \arguments{
 \item{ests}{List of \code{feols} estimates.}
 
-\item{cluster}{Scalar string denoting the name of the cluster column.}
+\item{cluster}{Scalar string denoting the name of the cluster column. If
+the same dataset is used (or subsets across samples) and the cluster
+variable "rowid" is passed, this will use the row-number of the original
+data. This with \code{ssadj = TRUE} will obtain the original standard errors.}
 
 \item{hypothesis}{String containing the hypothesis to test.
 See \code{marginaleffects::hypotheses} for more details. Additionally,
@@ -26,9 +29,7 @@ a coefficient is from in the hypothesis.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{df}{Scalar string denoting which degrees of freedom adjustment to
-make. Default is null which uses \code{n}. Can be either NULL, \code{"dfk"} or
-\code{"dfk2"} following Stata options. See details.}
+\item{df}{Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
 
 \item{joint}{Joint test of statistical significance. The null hypothesis value can be set using the \code{hypothesis} argument.
 \itemize{

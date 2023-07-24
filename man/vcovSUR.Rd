@@ -4,16 +4,18 @@
 \alias{vcovSUR}
 \title{Get joint variance-covariance matrix of seemingly unrelated regressions}
 \usage{
-vcovSUR(ests, cluster = NULL, df = NULL)
+vcovSUR(ests, cluster = NULL, ssadj = FALSE)
 }
 \arguments{
 \item{ests}{List of \code{feols} estimates.}
 
-\item{cluster}{Scalar string denoting the name of the cluster column.}
+\item{cluster}{Scalar string denoting the name of the cluster column. If
+the same dataset is used (or subsets across samples) and the cluster
+variable "rowid" is passed, this will use the row-number of the original
+data. This with \code{ssadj = TRUE} will obtain the original standard errors.}
 
-\item{df}{Scalar string denoting which degrees of freedom adjustment to
-make. Default is null which uses \code{n}. Can be either NULL, \code{"dfk"} or
-\code{"dfk2"} following Stata options. See details.}
+\item{ssadj}{Logical indicating whether to apply a small-sample adjustment.
+See details for how the adjustment is made.}
 }
 \value{
 Variance-covariance matrix of the combined set of coefficients in
@@ -23,18 +25,18 @@ all models in \code{ests}.
 Get joint variance-covariance matrix of seemingly unrelated regressions
 }
 \details{
-\code{dfk} and \code{dfk2} specifies the use of an alternative divisor in computing
-the covariance matrix for the equation residuals. As an asymptotically
-justified estimator, the default uses the number of sample observations
-(n) as a divisor when the two datasets have the same number of
-observations.
+The small-sample adjustment depends on the \code{cluster} option and the \code{ssadj}
+option. For each estimate, the degree of freedom calculation will be
+calculated. Denote them as c_i. For block V_ij, the adjustment will
+be sqrt(c_i * c_j) so that the diagonal elements are adjusted by c_i.
+This matches \code{dfk} option in \code{sureg}. If \code{cluster} is used (and is not
+"rowid"), then the adjustment will be G/(G-1) where G is the
+number of unique clusters. If \code{cluster} is \code{NULL} or is \code{"rowid"}, then
+the adjustment will be (N_i - 1)(N_i - K_i) where N_i is the
+number of observations and K_i is the number of coefficients used in
+estimate i.
 
-When the \code{dfk} option is set, a small-sample adjustment is
-made and the divisor is taken to be the square root of (n - k_i)(n - k_j),
-where k_i and k_j are the number of parameters in equations i and j,
-respectively (similarly the cube root of the product is taken if there are
-three estimates and so on..).
-
-When the \code{dfk2} option is set, the divisor is taken to be the mean of the
-residual degrees of freedom from the individual equations.
+If a \code{fixest_multi} object is used and \code{cluster} is not specified, then
+\code{cluster} will automatically be set to \code{"rowid"} since the same dataset
+is used in all estimates.
 }

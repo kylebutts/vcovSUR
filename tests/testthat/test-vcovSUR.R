@@ -59,3 +59,45 @@ test_that("Different Data Sets", {
   )
 })
 
+
+test_that("Degree of Freedom Adjustment", {
+  # No small-sample adjustment
+  mtcars$rowid = 1:nrow(mtcars)
+  (m1 <- feols(
+    hp ~ i(cyl), mtcars,
+    vcov = "hc1", ssc = ssc(adj = FALSE, cluster.adj = FALSE)
+  ))
+  (m2 <- feols(
+    hp ~ i(cyl) + mpg, mtcars, 
+    vcov = "hc1", ssc = ssc(adj = FALSE, cluster.adj = FALSE)
+  ))
+  vcov = vcovSUR(list(m1, m2), cluster = "rowid", ssadj = FALSE)
+  expect_equal(
+    vcov |> diag() |> sqrt(),
+    c(se(m1), se(m2))
+  )
+
+  # Yes small-sample adjustment ----
+  (m1 <- feols(
+    hp ~ i(cyl), mtcars,
+    vcov = "hc1", ssc = ssc(adj = TRUE, cluster.adj = FALSE)
+  ))
+  (m2 <- feols(
+    hp ~ i(cyl) + mpg, mtcars, 
+    vcov = "hc1", ssc = ssc(adj = TRUE, cluster.adj = FALSE)
+  ))
+
+  vcov = vcovSUR(list(m1, m2), ssadj = TRUE)
+
+  # Pass cluster = "rowid" which applies correct (n-1)/(n-k) adjustment
+  vcov_rowid = vcovSUR(list(m1, m2), cluster = "rowid", ssadj = TRUE)
+
+  expect_equal(
+    vcov |> diag() |> sqrt(), 
+    c(se(m1), se(m2))
+  )
+  expect_equal(
+    vcov_rowid |> diag() |> sqrt(), 
+    c(se(m1), se(m2))
+  )
+})
