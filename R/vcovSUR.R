@@ -1,6 +1,3 @@
-library(fixest)
-library(Matrix)
-
 #' Get joint variance-covariance matrix of seemingly unrelated regressions
 #' 
 #' @param ests List of `feols` estimates.

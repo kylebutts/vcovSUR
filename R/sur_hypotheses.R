@@ -1,5 +1,3 @@
-
-
 #' Hypothesis testing from seemingly-unrelated regressions
 #' 
 #' @description This function takes a set of regression esimates and 
@@ -48,18 +46,6 @@ sur_hypotheses <- function(ests, cluster = NULL, hypothesis = NULL, conf_level =
     joint = joint, 
     joint_test = joint_test
   )
-}
-
-
-get_coef.sur_model = function(model) {
-  x = model$estimate
-  names(x) = model$term
-  return(x)
-}
-
-set_coef.sur_model = function(model, coefs) {
-  model$estimate = coefs
-  return(model)
 }
 
 

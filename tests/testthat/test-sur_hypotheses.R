@@ -13,7 +13,6 @@ test_that("sur_hypotheses works", {
     coef(est1)[["wt"]] - coef(est2)[["wt"]]
   )
 
-
   hyp_test_clustered = sur_hypotheses(
     list(est1, est2), cluster = "id",
     hypothesis = "wt_1 = wt_2"
