@@ -60,7 +60,7 @@ get_cluster <- function(est, cluster, use_rowid) {
     cl <- unlist(lapply(
       est,
       function(x) {
-        df <- fixest:::fetch_data(x)
+        df <- fixest::fixest_data(x)
         if (use_rowid) {
           1:nrow(df)
         } else {
@@ -69,7 +69,7 @@ get_cluster <- function(est, cluster, use_rowid) {
       }
     ))
   } else if (inherits(est, "fixest")) {
-    df <- fixest:::fetch_data(est)
+    df <- fixest::fixest_data(est)
 
     # Note: don't use 1:est$nobs since some estimates might use different subsamples
     if (use_rowid) {
